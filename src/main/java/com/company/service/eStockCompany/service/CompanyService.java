@@ -2,7 +2,6 @@ package com.company.service.eStockCompany.service;
 
 import com.company.service.eStockCompany.model.DTO.Company;
 import com.company.service.eStockCompany.model.DTO.CompanyWithStock;
-import com.company.service.eStockCompany.model.entity.CompanyDetails;
 
 import java.util.List;
 

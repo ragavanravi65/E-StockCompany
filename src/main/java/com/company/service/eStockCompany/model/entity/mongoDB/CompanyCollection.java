@@ -1,23 +1,24 @@
-package com.company.service.eStockCompany.model.entity;
+package com.company.service.eStockCompany.model.entity.mongoDB;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+
 @Data
-@Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "companyDetails",name = "CompanyData")
-public class CompanyDetails {
+@Builder
+@Document("companyDetails")
+public class CompanyCollection {
+
     @Id
+    private String id;
     @NotNull
     private String companyCode;
     @NotNull
@@ -30,6 +31,4 @@ public class CompanyDetails {
     private String website;
     @NotNull
     private String stockExchange;
-
 }
-
