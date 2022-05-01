@@ -100,7 +100,10 @@ public class CompanyServiceImpl implements CompanyService {
             companyRepository.deleteById(companyCode);
             deleteFlag+=2;
         }
+        mongoTemplate.findAllAndRemove(new Query(Criteria.where("companyCode").is(companyCode)), CompanyCollection.class);
+
         ResponseEntity<CompanyStockResponse> deletedValues= externalCallToStockService(companyCode,"/deleteAll",HttpMethod.DELETE);
+
         if(!deletedValues.getBody().getStocks().isEmpty())deleteFlag+=3;
 
         return deleteFlag == 5 ? "successfully deleted the details of stock and company " + companyCode :
@@ -108,7 +111,6 @@ public class CompanyServiceImpl implements CompanyService {
                         deleteFlag == 3 ? "Removed from Stock Database" : "No data available to delete";
 
     }
-
 
 
     private ResponseEntity<CompanyStockResponse> externalCallToStockService(String companyCode, String endpoint, HttpMethod value) {

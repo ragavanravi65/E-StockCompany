@@ -7,13 +7,15 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 
 @SpringBootApplication
-//@EnableEurekaClient
+@EnableEurekaClient
 @EnableMongoRepositories //(basePackageClasses = CompanyMongoRepository.class)
+//@EnableResourceServer
 public class EStockCompanyApplication {
 
 	public static void main(String[] args) {
