@@ -60,12 +60,12 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyWithStock fetchByCompanyCode(String companyCode) {
         log.info("Fetch company Details from company code {}", companyCode);
-        Optional<CompanyCollection> findByCodeResult = companyMongoRepository.findById(companyCode);
+        Optional<CompanyCollection> findByCodeResult = companyMongoRepository.findByCompanyCode(companyCode);
         CompanyCollection companyCollection = findByCodeResult.isPresent() ? findByCodeResult.get() : null;
         ResponseEntity<CompanyStockResponse> stockData = externalCallToStockService(companyCode,"/getLatest",
                 HttpMethod.GET);
         return CompanyWithStock.builder().company(mapperImpl.DocToCompany(companyCollection))
-                .stock(stockData.getBody().getStocks()!=null? stockData.getBody().getStocks().get(0):null).build();
+                .stock(stockData.getBody()!=null? stockData.getBody().getStocks().get(0):null).build();
     }
 
 

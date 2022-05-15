@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document("companyDetails")
+@Document(collection="companyDetails")
 public class CompanyCollection {
 
     @Id

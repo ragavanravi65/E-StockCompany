@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1.0/market/company")
 @Slf4j
+@CrossOrigin
 @Validated
 public class CompanyController {
 
