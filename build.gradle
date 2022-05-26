@@ -2,11 +2,18 @@ plugins {
 	id 'org.springframework.boot' version '2.5.12'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id "org.sonarqube" version "3.3"
+	id 'jacoco'
 }
 
 group = 'com.company.service'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+def exclusionList = [
+		"**com/company/service/estockcompany/service/**",
+		"**/com/company/service/estockcompany/EStockCompanyApplication.java",
+		"**/com/company/service/estockcompany/configuration/SwaggerConfiguration.java"
+]
 
 configurations {
 	compileOnly {
@@ -25,50 +32,67 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-// https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-
-	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	implementation 'mysql:mysql-connector-java:8.0.21'
-
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.6'
-// https://mvnrepository.com/artifact/org.mapstruct/mapstruct
 	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-
-	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.0.5'
-
-// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.6.7'
-//// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
-//	implementation 'org.springframework.boot:spring-boot-starter-security:2.6.6'
-//
-//	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2
-//	implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.2.5.RELEASE'
-
-
+	implementation 'io.micrometer:micrometer-registry-prometheus:1.8.5'
 	annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'junit:junit:4.13'
+
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+
 
 bootJar {
 	baseName = "eStockCompany"
 	version =  '1.0.0'
 }
 
+tasks.named('sonarqube').configure {
+	dependsOn test
+}
 
-//plugins {
-//	id "org.sonarqube" version "3.3"
-//}
-//
-//sonarqube {
-//	properties {
-//		property "sonar.projectKey", "ragavanravi65_E-StockCompany_AYB_jDNpfUF_yMVQuGdf"
-//	}
-//}
+sonarqube {
+	properties {
+		property "sonar.projectKey", "E-CompanyData"
+		property "sonar.host.url","http://localhost:9000"
+		property  "sonar.login","de4249f42ab78557da1d2f51f4d45baf183c948e"
+		property  "sonar.jacoco.reportPath","build/reports/jacoco/test/jacocoTestReport.xml"
+		property 'sonar.coverage.exclusions',exclusionList
+	}
+}
+
+tasks.named('test') {
+	useJUnit()
+	finalizedBy jacocoTestReport
+}
+
+
+jacocoTestReport {
+	dependsOn test
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					"**/model/**",
+					"**/configuration/*",
+					"**/util/**",
+					"**/mapper/**",
+					"com/company/service/estockcompany/service/**",
+					"com/company/service/estockcompany/EStockCompanyApplication.java"
+			])
+		}))
+	}
+
+	reports {
+		xml.enabled(true)
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.7"
+}

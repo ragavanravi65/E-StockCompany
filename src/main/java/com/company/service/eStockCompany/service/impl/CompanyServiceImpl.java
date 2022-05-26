@@ -1,12 +1,12 @@
-package com.company.service.eStockCompany.service.Impl;
+package com.company.service.eStockCompany.service.impl;
 
-import com.company.service.eStockCompany.Repository.CompanyRepository;
-import com.company.service.eStockCompany.Repository.mongoDB.CompanyMongoRepository;
+import com.company.service.eStockCompany.repository.CompanyRepository;
+import com.company.service.eStockCompany.repository.mongoDB.CompanyMongoRepository;
 import com.company.service.eStockCompany.mapper.SimpleSourceDestinationMapper;
-import com.company.service.eStockCompany.model.DTO.Company;
-import com.company.service.eStockCompany.model.DTO.CompanyStockResponse;
-import com.company.service.eStockCompany.model.DTO.CompanyWithStock;
-import com.company.service.eStockCompany.model.DTO.Stock;
+import com.company.service.eStockCompany.model.dto.Company;
+import com.company.service.eStockCompany.model.dto.CompanyStockResponse;
+import com.company.service.eStockCompany.model.dto.CompanyWithStock;
+import com.company.service.eStockCompany.model.dto.Stock;
 import com.company.service.eStockCompany.model.entity.CompanyDetails;
 import com.company.service.eStockCompany.model.entity.mongoDB.CompanyCollection;
 import com.company.service.eStockCompany.service.CompanyService;
@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 @Slf4j
 public class CompanyServiceImpl implements CompanyService {
@@ -43,7 +42,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    private final String STOCK_URL = "http://localhost:8082/stockData/";
+    private static final String STOCK_URL = "http://localhost:8082/stockData/";
 
     private SimpleSourceDestinationMapper mapperImpl
             = Mappers.getMapper(SimpleSourceDestinationMapper.class);
@@ -51,10 +50,9 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Company registerCompanyService(Company company) {
         log.info("Registration of new Company details with Stock Information");
-        //need to handle duplicate insertion
         CompanyDetails postUpdateValue = companyRepository.save(mapperImpl.companyToDetails(company));
         companyMongoRepository.save(mapperImpl.companyToCollection(company));
-        return mapperImpl.DetailsToCompany(postUpdateValue);
+        return mapperImpl.detailsToCompany(postUpdateValue);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class CompanyServiceImpl implements CompanyService {
         CompanyCollection companyCollection = findByCodeResult.isPresent() ? findByCodeResult.get() : null;
         ResponseEntity<CompanyStockResponse> stockData = externalCallToStockService(companyCode,"/getLatest",
                 HttpMethod.GET);
-        return CompanyWithStock.builder().company(mapperImpl.DocToCompany(companyCollection))
+        return CompanyWithStock.builder().company(mapperImpl.docToCompany(companyCollection))
                 .stock(stockData.getBody()!=null? stockData.getBody().getStocks().get(0):null).build();
     }
 
@@ -79,12 +77,14 @@ public class CompanyServiceImpl implements CompanyService {
                 {
                     ResponseEntity<CompanyStockResponse> stockData = externalCallToStockService(companyDet.getCompanyCode(),"/getLatest",
                             HttpMethod.GET);
-                    Stock resultStock = stockData.getBody() != null ?
+                    Stock resultStock = stockData!=null?
+                            stockData.getBody() != null ?
                             stockData.getBody().getStocks() != null ? stockData.getBody().getStocks().get(0) : null
-                            : null;
+                                                : null
+                            :null;
                     log.info("ResponseEntity" +stockData);
                     companyStockList.add(CompanyWithStock.builder()
-                            .company(mapperImpl.DetailsToCompany(companyDet))
+                            .company(mapperImpl.detailsToCompany(companyDet))
                             .stock(resultStock)
                             .build());
                 }

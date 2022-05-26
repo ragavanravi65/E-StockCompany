@@ -1,4 +1,4 @@
-package com.company.service.eStockCompany.model.DTO;
+package com.company.service.eStockCompany.model.dto;
 
 
 import lombok.AllArgsConstructor;

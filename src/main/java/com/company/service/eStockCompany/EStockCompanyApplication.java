@@ -1,6 +1,5 @@
 package com.company.service.eStockCompany;
 
-import com.company.service.eStockCompany.Repository.mongoDB.CompanyMongoRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;

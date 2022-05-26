@@ -1,7 +1,8 @@
-package com.company.service.eStockCompany.model.DTO;
+package com.company.service.eStockCompany.model.dto;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Company {
 
     @NotNull(message = "company code can't be null")

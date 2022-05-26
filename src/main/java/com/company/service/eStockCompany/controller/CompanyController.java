@@ -1,8 +1,8 @@
 package com.company.service.eStockCompany.controller;
 
 
-import com.company.service.eStockCompany.model.DTO.Company;
-import com.company.service.eStockCompany.model.DTO.CompanyWithStock;
+import com.company.service.eStockCompany.model.dto.Company;
+import com.company.service.eStockCompany.model.dto.CompanyWithStock;
 import com.company.service.eStockCompany.service.CompanyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

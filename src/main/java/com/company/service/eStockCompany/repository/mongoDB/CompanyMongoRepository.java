@@ -1,4 +1,4 @@
-package com.company.service.eStockCompany.Repository.mongoDB;
+package com.company.service.eStockCompany.repository.mongoDB;
 
 import com.company.service.eStockCompany.model.entity.mongoDB.CompanyCollection;
 import org.springframework.data.mongodb.repository.MongoRepository;

@@ -16,7 +16,7 @@ public class SwaggerConfiguration {
 	public Docket defaultApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.company.service.eStockCompany"))
+				.apis(RequestHandlerSelectors.basePackage("com.company.service.estockcompany"))
 				.paths(PathSelectors.any())
 				.build()
 				.apiInfo(getApiInfo());
